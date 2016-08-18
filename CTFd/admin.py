@@ -809,7 +809,7 @@ def admin_create_chal():
     flags = [{'flag':request.form['key'], 'type':int(request.form['key_type[0]'])}]
 
     # Create challenge
-    chal = Challenges(request.form['name'], request.form['desc'], request.form['value'], request.form['category'], flags)
+    chal = Challenges(request.form['name'], request.form['desc'], request.form['value'], request.form['category'], flags, request.form['dependsupon'])
     if 'hidden' in request.form:
         chal.hidden = True
     else:
@@ -865,6 +865,7 @@ def admin_update_chal():
     challenge.description = request.form['desc']
     challenge.value = request.form['value']
     challenge.category = request.form['category']
+    challenge.dependsupon = request.form['dependsupon']
     challenge.hidden = 'hidden' in request.form
     db.session.add(challenge)
     db.session.commit()

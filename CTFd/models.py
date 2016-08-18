@@ -63,13 +63,15 @@ class Challenges(db.Model):
     category = db.Column(db.String(80))
     flags = db.Column(db.Text)
     hidden = db.Column(db.Boolean)
+    dependsupon = db.Column(db.Integer) # krw, for creating inter-flag dependency
 
-    def __init__(self, name, description, value, category, flags):
+    def __init__(self, name, description, value, category, flags, dependsupon=None):
         self.name = name
         self.description = description
         self.value = value
         self.category = category
         self.flags = json.dumps(flags)
+        self.dependsupon = dependsupon
 
     def __repr__(self):
         return '<chal %r>' % self.name

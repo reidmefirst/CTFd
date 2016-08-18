@@ -80,6 +80,7 @@ function submitkey(chal, key, nonce) {
 
             answer_input.removeClass("correct");
             answer_input.addClass("wrong");
+            noflag();
             setTimeout(function () {
                 answer_input.removeClass("wrong");
             }, 3000);
@@ -87,12 +88,13 @@ function submitkey(chal, key, nonce) {
         else if (result.status == 1){ // Challenge Solved
             result_notification.addClass('alert alert-success alert-dismissable');
             result_notification.slideDown();
-
+            
             $('.chal-solves').text((parseInt($('.chal-solves').text().split(" ")[0]) + 1 +  " Solves") );
 
             answer_input.val("");
             answer_input.removeClass("wrong");
             answer_input.addClass("correct");
+            yesflag(); // krw
         }
         else if (result.status == 2){ // Challenge already solved
             result_notification.addClass('alert alert-info alert-dismissable');
@@ -202,6 +204,10 @@ function loadchals() {
             var chalscore = $("<span>{0}</span>".format(chalinfo.value));
             chalbutton.append(chalheader);
             chalbutton.append(chalscore);
+            if (chalinfo.id == ""){
+                chalbutton = "<h5>LOCKED</h5>";
+                chalscore = "<span>HIDDEN</span>";
+            }
             chalwrap.append(chalbutton);
 
             $("#"+ catid +"-row").find(".category-challenges > .chal-row").append(chalwrap);
