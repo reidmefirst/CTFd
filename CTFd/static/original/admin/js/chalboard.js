@@ -53,10 +53,26 @@ function submitkey(chal, key) {
         alert(data)
     })
 }
-//function loaddeps(chal){
-//    $.get(script_root + '/admin/deps/' + chal, function(data){
-//        $('# KRW
-//}
+
+//Set selected, for finding the item with the proper id
+function setSelectedValue(selectObj, valueToSet) {
+    for (var i = 0; i < selectObj.options.length; i++) {
+        if (selectObj.options[i].value == valueToSet) {
+            selectObj.options[i].selected = true;
+            return;
+        }
+    }
+}
+function loaddeps(chal){
+    $.get(script_root + '/admin/deps/' + chal, function(data){
+        deps = $.parseJSON(JSON.stringify(data));
+        dep = deps['deps'][0];
+        obj = document.getElementById("dependsuponselect2");
+        setSelectedValue(obj, dep['dependsupon']);
+        //document.getElementById("dependsuponselect2").selectedIndex = dep['dependsupon'];
+    })
+}
+
 function loadkeys(chal){
     $.get(script_root + '/admin/keys/' + chal, function(data){
         $('#keys-chal').val(chal);
@@ -181,6 +197,7 @@ function loadchals(){
         $('#challenges button').click(function (e) {
             loadchal(this.value);
             loadkeys(this.value);
+            loaddeps(this.value); // KRW
             loadtags(this.value);
             loadfiles(this.value);
         });
