@@ -53,7 +53,10 @@ function submitkey(chal, key) {
         alert(data)
     })
 }
-
+//function loaddeps(chal){
+//    $.get(script_root + '/admin/deps/' + chal, function(data){
+//        $('# KRW
+//}
 function loadkeys(chal){
     $.get(script_root + '/admin/keys/' + chal, function(data){
         $('#keys-chal').val(chal);

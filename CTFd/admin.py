@@ -361,6 +361,17 @@ def admin_keys(chalid):
         db.session.close()
         return '1'
 
+@admin.route('/admin/deps/<chalid>', methods=['GET'])
+@admins_only # KRW, let anyone query this I guess
+def admin_deps(chalid):
+   if request.method == 'GET':
+        challenge = Challenges.query.filter_by(id=chalid).first_or_404() #add_columns('dependsupon') # KRW
+        #print "Debug: deps is", deps
+        json_data = {'deps':[]}
+        json_data['deps'].append({"dependsupon":challenge.dependsupon})
+        return jsonify(json_data)
+   else:
+        return jsonify("")
 
 @admin.route('/admin/tags/<chalid>', methods=['GET', 'POST'])
 @admins_only
