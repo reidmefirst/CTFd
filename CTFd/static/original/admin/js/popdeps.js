@@ -1,5 +1,7 @@
 function popdropdownnew() {
-    $.get(script_root + "/chals", function (data) {
+    $.post(script_root + "/admin/chals", {
+        'nonce': $('#nonce').val()
+    }, function (data) {
         var categories = [];
         challenges = $.parseJSON(JSON.stringify(data));
         for (var i = challenges['game'].length - 1; i >= 0; i--) {
@@ -14,7 +16,9 @@ function popdropdownnew() {
 }
 
 function popdropdownedits() {
-    $.get(script_root + "/chals", function (data) {
+    $.post(script_root + "/admin/chals", {
+        'nonce': $('#nonce').val()
+    }, function (data) {
         var categories = [];
         challenges = $.parseJSON(JSON.stringify(data));
         for (var i = challenges['game'].length - 1; i >= 0; i--) {
