@@ -44,26 +44,23 @@ def chals():
         solves_sub = db.session.query(Solves.chalid, db.func.count(Solves.chalid).label('solves')).join(Teams, Solves.teamid == Teams.id).filter(Teams.banned == False).group_by(Solves.chalid).subquery()
         solves2 = db.session.query(solves_sub.columns.chalid, solves_sub.columns.solves, Challenges.name) \
             .join(Challenges, solves_sub.columns.chalid == Challenges.id).all()
-        print "solves: ", solves
-        print "solves_sub: ", solves_sub
-        print "solves2: ", solves2
-        print "solves[0]: ", type(solves[0])
         json = {'game':[]}
         for x in chals:
             tags = [tag.tag for tag in Tags.query.add_columns('tag').filter_by(chal=x[1]).all()]
             files = [ str(f.location) for f in Files.query.filter_by(chal=x.id).all() ]
             dependsupon = x[6]
-            if None != dependsupon: # challenge has dependency, verify solves
+            # Interestingly, the dependsupon is an Int if it's set, and is a string
+            # with "None" if it's not (I think the backend converted this to
+            # NoneType for us in an older version of CTFd)
+            if "None" != dependsupon: # challenge has dependency, verify solves
                 print "challenge %d has dependency on challenge %d" % (x[1], x[6])
                 satisfied = False
                 for solve in solves:
-                    print "comparing %d to %d" % (int(solve.chalid), dependsupon)
                     if int(solve.chalid) == dependsupon: # prereq satisfied
                         satisfied = True
                 if satisfied:
                     json['game'].append({'id':x[1], 'name':x[2], 'value':x[3], 'description':x[4], 'category':x[5], 'files':files, 'tags':tags})
                 else:
-                    print "dependency not met, hiding"
                     json['game'].append({'id':'', 'name':x[2], 'value':x[3], 'description':'You must solve another challenge to unlock this challenge', 'category':x[5], 'files':'', 'tags':tags})
             else: # no prerequisites, add it!
                 json['game'].append({'id':x[1], 'name':x[2], 'value':x[3], 'description':x[4], 'category':x[5], 'files':files, 'tags':tags})
